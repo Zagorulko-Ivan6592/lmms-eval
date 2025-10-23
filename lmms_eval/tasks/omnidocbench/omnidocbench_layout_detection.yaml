@@ -1,0 +1,7 @@
+task: "omnidocbench_layout_detection"
+test_split: validation
+include: _default_template_omnidocbench_layout_yaml
+metric_list:
+  - metric: omnidocbench_layout_map
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_layout_results
+    higher_is_better: true

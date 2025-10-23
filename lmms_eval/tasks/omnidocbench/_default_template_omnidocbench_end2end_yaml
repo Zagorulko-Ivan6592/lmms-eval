@@ -1,0 +1,25 @@
+dataset_path: opendatalab/OmniDocBench
+dataset_kwargs:
+  token: True
+doc_to_target: "layout_dets"
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: "Parse this document page and convert it to structured markdown format, preserving layout, tables, formulas, and text formatting."
+    post_prompt: "\nProvide the complete markdown representation of the document."
+doc_to_visual: !function omnidocbench_utils.omnidocbench_doc_to_visual
+doc_to_text: !function omnidocbench_utils.omnidocbench_doc_to_text
+doc_to_target: "layout_dets"
+process_results: !function omnidocbench_utils.omnidocbench_process_end2end_results
+model_specific_generation_kwargs:
+  llava:
+    image_aspect_ratio: original
+output_type: generate_until
+dataset_name: "validation"
+generation_kwargs:
+  until:
+    - "ASSISTANT:"
+  max_new_tokens: 2048
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false

@@ -1,0 +1,7 @@
+task: "omnidocbench_table_recognition"
+test_split: validation
+include: _default_template_omnidocbench_table_yaml
+metric_list:
+  - metric: omnidocbench_table_teds
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_table_results
+    higher_is_better: true

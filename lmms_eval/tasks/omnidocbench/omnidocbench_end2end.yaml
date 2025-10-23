@@ -1,0 +1,16 @@
+task: "omnidocbench_end2end"
+test_split: validation
+include: _default_template_omnidocbench_end2end_yaml
+metric_list:
+  - metric: omnidocbench_overall_score
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_end2end_results
+    higher_is_better: true
+  - metric: omnidocbench_text_edit_distance
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_text_results
+    higher_is_better: false
+  - metric: omnidocbench_table_teds
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_table_results
+    higher_is_better: true
+  - metric: omnidocbench_formula_cdm
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_formula_results
+    higher_is_better: true

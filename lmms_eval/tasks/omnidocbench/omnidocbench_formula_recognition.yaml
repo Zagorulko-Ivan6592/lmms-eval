@@ -1,0 +1,7 @@
+task: "omnidocbench_formula_recognition"
+test_split: validation
+include: _default_template_omnidocbench_formula_yaml
+metric_list:
+  - metric: omnidocbench_formula_cdm
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_formula_results
+    higher_is_better: true

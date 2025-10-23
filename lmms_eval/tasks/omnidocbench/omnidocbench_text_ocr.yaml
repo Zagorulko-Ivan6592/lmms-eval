@@ -1,0 +1,7 @@
+task: "omnidocbench_text_ocr"
+test_split: validation
+include: _default_template_omnidocbench_text_yaml
+metric_list:
+  - metric: omnidocbench_text_edit_distance
+    aggregation: !function omnidocbench_utils.omnidocbench_aggregate_text_results
+    higher_is_better: false

@@ -8,35 +8,47 @@ from typing import List, Dict, Any, Union
 from lmms_eval.api.instance import Instance
 
 
-def mws_vision_bench_doc_to_visual(doc: Dict[str, Any]) -> List[str]:
+def mws_vision_bench_doc_to_visual(doc: Dict[str, Any]) -> List[Union[str, Any]]:
     """
     Extract visual information from MWS-Vision-Bench document.
     
     Args:
-        doc: Document containing image path and metadata
+        doc: Document containing image path or PIL Image object
         
     Returns:
-        List of image paths
+        List of image paths or PIL Image objects
     """
-    # MWS-Vision-Bench stores image path in 'image_path' field
+    # MWS-Vision-Bench from HF has 'image' field (PIL Image)
+    if "image" in doc:
+        # Return PIL Image object directly (lmms-eval handles it)
+        return [doc["image"]]
+    
+    # Fallback: check for image_path (for local files)
     image_path = doc.get("image_path", "")
     if image_path:
         return [image_path]
     return []
 
 
-def mws_vision_bench_doc_to_text(doc: Dict[str, Any]) -> str:
+def mws_vision_bench_doc_to_text(doc: Dict[str, Any], lmms_eval_specific_kwargs=None) -> str:
     """
     Convert MWS-Vision-Bench document to text prompt.
     
     Args:
         doc: Document containing question and metadata
+        lmms_eval_specific_kwargs: Optional kwargs with pre_prompt and post_prompt
         
     Returns:
         Formatted text prompt
     """
     question = doc.get("question", "")
     task_type = doc.get("type", "")
+    
+    # Apply pre_prompt if provided
+    if lmms_eval_specific_kwargs and "pre_prompt" in lmms_eval_specific_kwargs:
+        pre_prompt = lmms_eval_specific_kwargs.get("pre_prompt", "")
+        if pre_prompt:
+            question = f"{pre_prompt}{question}"
     
     # Format the prompt based on task type
     if "text grounding" in task_type.lower():
@@ -49,6 +61,12 @@ def mws_vision_bench_doc_to_text(doc: Dict[str, Any]) -> str:
         prompt = f"Ответьте на вопрос о содержимом документа.\n\nВопрос: {question}"
     else:  # Default OCR task
         prompt = f"Распознайте текст на изображении.\n\nВопрос: {question}"
+    
+    # Apply post_prompt if provided
+    if lmms_eval_specific_kwargs and "post_prompt" in lmms_eval_specific_kwargs:
+        post_prompt = lmms_eval_specific_kwargs.get("post_prompt", "")
+        if post_prompt:
+            prompt = f"{prompt}{post_prompt}"
     
     return prompt
 

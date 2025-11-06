@@ -1,7 +1,4 @@
 task: "mws_vision_bench_validation"
-test_split: validation
+test_split: train
 include: _default_template_mws_vision_bench_yaml
-metric_list:
-  - metric: mws_vision_bench_accuracy
-    aggregation: !function mws_vision_bench_utils.mws_vision_bench_aggregate_results
-    higher_is_better: true
+
